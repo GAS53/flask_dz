@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_login import login_required
 
 article = Blueprint('article',__name__, url_prefix='/article', static_folder='../static')
 
@@ -14,6 +15,7 @@ def article_list():
     return render_template('/article/list.html', articles=ARTICLES)
 
 @article.route('/<int:pk>')
+@login_required
 def article_one(pk: int):
     try:
         article = ARTICLES[pk]
