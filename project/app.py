@@ -1,12 +1,10 @@
 from flask import Flask
 
-
 from article.views import article
 from user.views import user
 from user.auth import auth, login_manager
 from models.database import db
 from config import ProductionConfig, DevelopmentConfig
-
 
 def create_app():
     app = Flask(__name__)
@@ -17,6 +15,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
     db.init_app(app)
+
     return app
 
 

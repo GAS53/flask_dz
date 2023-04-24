@@ -1,11 +1,12 @@
 from werkzeug.security import generate_password_hash
-
+from flask_migrate import Migrate
 
 from app import create_app
 from models.user import User
 from models.database import db
 
 app = create_app()
+migrate = Migrate(app, db, compare_type=True)
 
 
 @app.cli.command('init_db')
