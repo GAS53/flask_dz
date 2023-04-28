@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash
 from flask_migrate import Migrate
+from flask import render_template
 
 from app import create_app
 from models.user import User
@@ -9,18 +10,24 @@ app = create_app()
 migrate = Migrate(app, db, compare_type=True)
 
 
+@app.route('/')
+def index():
+    return render_template("index.html")
+
 @app.cli.command('init_db')
 def init_db():
     db.create_all()
 
 
-@app.cli.command('fill_db')
-def fill_db():
-    admin = User(login='admin_login', email='admin@admin.ru', pswd=generate_password_hash('dfgdg'), is_staff=True)
-    user = User(login='login', email='name@name.ru', pswd=generate_password_hash('dfgddfg'), is_staff=False)
+@app.cli.command('create_admin')
+def create_admin():
+    admin = User(login='admin_login', first_name='first_adm', last_name='last_adm', email='admin@admin.ru', is_staff=True, password='test')
+    admin.password = 'adm_pass'
     db.session.add(admin)
-    db.session.add(user)
+    print("created admin:", admin)
     db.session.commit()
+
+
 
 if __name__== '__main__':
     app.run(host='0.0.0.0')

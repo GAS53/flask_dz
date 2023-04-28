@@ -39,14 +39,23 @@
               <li class="nav-item">
                 <a class="nav-link disabled">Disabled</a>
               </li>
-            </ul>
-            {% if current_user.is_authenticated %}
+              {% if current_user.is_authenticated %}
+              <li class="nav-item">
               <p>вы вошли как {{ current_user.login }}
+              </li>
+              <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.logout') }}">Выйти</a>
-              
+            </li>
             {% else %}
+            <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.login') }}">Войти</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.register') }}">Зарегестрироваться</a>
+            </li>
             {% endif %}
+            </ul>
+            
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
