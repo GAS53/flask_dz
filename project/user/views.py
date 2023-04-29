@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, render_template, redirect, flash, url_
 from flask_login import logout_user, login_user, current_user
 from werkzeug.security import check_password_hash
 from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import NotFound
 
 from models.user import User
 from user.auth import auth, login_required
@@ -42,8 +43,10 @@ def secret_view(): # вход под логином
     return "Super secret data"
 
 
-@auth.route("/login", methods=["GET", "POST"])
+@auth.route("/login/", methods=["GET", "POST"], endpoint="login")
 def login():
+    if not (current_user.is_authenticated and current_user.is_staff):
+        raise NotFound
     if request.method == "GET":
         return render_template("user/login.html" )
 
@@ -72,26 +75,26 @@ def register():
             form.username.errors.append("Такое имя пользователя уже используется")
             return render_template("user/register.html", form=form)
     
-    if User.query.filter_by(email=form.email.data).count():
-        form.email.errors.append("Пользователь с таким email уже существует")
-        return render_template("user/register.html", form=form)
-    
-    user = User(
-        first_name=form.first_name.data,
-        last_name=form.last_name.data,
-        login=form.username.data,
-        email=form.email.data,
-        is_staff=False,)
-    print(form.password.data)
-    user.password = form.password.data
-    db.session.add(user)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        current_app.logger.exception("пользователь не создан")
-        error = "пользователь не создан"
-    else:
-        current_app.logger.info(f"пользователь создан {user}")
-        login_user(user)
-        return redirect(url_for("index"))
+        if User.query.filter_by(email=form.email.data).count():
+            form.email.errors.append("Пользователь с таким email уже существует")
+            return render_template("user/register.html", form=form)
+        
+        user = User(
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            login=form.username.data,
+            email=form.email.data,
+            is_staff=False,)
+        print(form.password.data)
+        user.password = form.password.data
+        db.session.add(user)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            current_app.logger.exception("пользователь не создан")
+            error = "пользователь не создан"
+        else:
+            current_app.logger.info(f"пользователь создан {user}")
+            login_user(user)
+            return redirect(url_for("index"))
     return render_template("user/register.html", form=form, error=error)
