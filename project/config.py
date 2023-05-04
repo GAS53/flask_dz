@@ -7,7 +7,7 @@ class Config(object):
     DB_SERVER = 'localhost'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = 'dsfgsdfgsdegsre34tg34tg34wergk3jhg34g3q63q4tg3qerg'
-
+    WTF_CSRF_ENABLED = True
 
 
 class ProductionConfig(Config):
