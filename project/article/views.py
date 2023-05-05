@@ -7,7 +7,7 @@ from models.article import Article
 from forms.article import CreateArticleForm
 
 from models.database import db
-from models.autor import Author
+from models.author import Author
 
 article = Blueprint('article',__name__, url_prefix='/article', static_folder='../static')
 

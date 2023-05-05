@@ -3,9 +3,10 @@ from wtforms import StringField, validators, PasswordField, SubmitField
 
 
 class UserBaseForm(FlaskForm):
+    login = StringField("логин",[validators.DataRequired()],)
     first_name = StringField("Имя")
     last_name = StringField("Фамилия")
-    username = StringField("логин",[validators.DataRequired()],)
+    
     email = StringField("Email", [
         validators.DataRequired(),
         validators.Email(),
@@ -13,7 +14,7 @@ class UserBaseForm(FlaskForm):
     filters=[lambda data: data and data.lower()],)
     
 class RegistrationForm(UserBaseForm):
-    password = PasswordField("новый пароль", [
+    password = PasswordField("Введите пароль", [
         validators.DataRequired(),
         validators.EqualTo("confirm", message="Веденые пароли должны быть одинаковыми"),
         ], )
@@ -22,6 +23,6 @@ class RegistrationForm(UserBaseForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField("username", [validators.DataRequired()],)
+    login = StringField("login", [validators.DataRequired()],)
     password = PasswordField("Password", [validators.DataRequired()],)
     submit = SubmitField("Login")

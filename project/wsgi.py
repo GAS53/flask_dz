@@ -5,6 +5,7 @@ from flask import render_template
 from app import create_app
 from models.user import User
 from models.database import db
+from sqlalchemy import create_engine
 
 app = create_app()
 migrate = Migrate(app, db, compare_type=True)
@@ -14,9 +15,12 @@ migrate = Migrate(app, db, compare_type=True)
 def index():
     return render_template("index.html")
 
-@app.cli.command('init_db')
-def init_db():
+
+@app.cli.command('create_tables')
+def create_tables():
     db.create_all()
+
+
 
 
 @app.cli.command('create_admin')

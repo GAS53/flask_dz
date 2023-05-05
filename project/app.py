@@ -17,14 +17,9 @@ def create_app():
     app.register_blueprint(article)
     app.register_blueprint(user)
     app.register_blueprint(auth, url_prefix="/auth")
-    app.register_blueprint(authors, surl_prefix="/authors"))
+    app.register_blueprint(authors, surl_prefix="/authors")
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
     flask_bcrypt.init_app(app)
     db.init_app(app)
     return app
-
-
-    
-
-

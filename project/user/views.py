@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from models.user import User
 from user.auth import auth, login_required
-from forms.user import RegistrationForm
+from forms.user import RegistrationForm, LoginForm
 from models.database import db
 
 user = Blueprint('user',__name__, url_prefix='/user', static_folder='../static')
@@ -45,56 +45,53 @@ def secret_view(): # вход под логином
 
 @auth.route("/login/", methods=["GET", "POST"], endpoint="login")
 def login():
-    if not (current_user.is_authenticated and current_user.is_staff):
-        raise NotFound
-    if request.method == "GET":
-        return render_template("user/login.html" )
-
-
-    login = request.form.get("login")
-    password = request.form.get("password")
-    print(login, password)
-    user = User.query.filter_by(login=login).first()
-
-    if not user or not check_password_hash(user.pswd, password):
-        flash("Check your login details")
-        return redirect(url_for("auth.login"))
-    login_user(user)
-    return render_template("index.html")
-
-
-@auth.route("/register", methods=["GET", "POST"], endpoint="register")
-def register():
     if current_user.is_authenticated:
         return redirect("index")
     
+    form = LoginForm(request.form)
+    
+    if request.method == "POST" and form.validate_on_submit():
+        user = User.query.filter_by(login=form.login.data).one_or_none()
+        print(user)
+        if user is None:
+            return render_template("user/login.html", form=form, error="такого логина не сущетвует")
+        
+        if not user.validate_password(form.password.data):
+            return render_template("user/login.html", form=form, error="неправильный логин или пароль")
+        login_user(user)
+        return redirect(url_for("index"))
+    return render_template("user/login.html", form=form)
+
+
+
+@auth.route("/register/", methods=["GET", "POST"], endpoint="register")
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
     error = None
     form = RegistrationForm(request.form)
     if request.method == "POST" and form.validate_on_submit():
-        if User.query.filter_by(username=form.username.data).count():
-            form.username.errors.append("Такое имя пользователя уже используется")
-            return render_template("user/register.html", form=form)
+        usr = User.query.filter_by(login=form.login.data).one_or_none()
+        if usr:
+            return render_template("user/register.html", form=form, error="Такое имя пользователя уже используется")
     
         if User.query.filter_by(email=form.email.data).count():
-            form.email.errors.append("Пользователь с таким email уже существует")
-            return render_template("user/register.html", form=form)
-        
+            return render_template("user/register.html", form=form, error="Пользователь с таким email уже существует")
         user = User(
+            login=form.login.data,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-            login=form.username.data,
             email=form.email.data,
-            is_staff=False,)
-        print(form.password.data)
-        user.password = form.password.data
-        db.session.add(user)
+            is_staff=False)
+        
         try:
-            db.session.commit()
+            db.session.add(user)
+            db.session.commit()    
         except IntegrityError:
             current_app.logger.exception("пользователь не создан")
             error = "пользователь не создан"
         else:
             current_app.logger.info(f"пользователь создан {user}")
             login_user(user)
-            return redirect(url_for("index"))
+    
     return render_template("user/register.html", form=form, error=error)
