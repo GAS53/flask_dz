@@ -37,7 +37,7 @@ def logout(): # Также добавляем view для выхода.
     logout_user()
     return render_template("index.html")
 
-@auth.route("/secret/")
+@auth.route("/secret/") # работает!!!
 @login_required
 def secret_view(): # вход под логином
     return "Super secret data"
@@ -46,7 +46,7 @@ def secret_view(): # вход под логином
 @auth.route("/login/", methods=["GET", "POST"], endpoint="login")
 def login():
     if current_user.is_authenticated:
-        return redirect("index")
+        return redirect(url_for("index"))
     
     form = LoginForm(request.form)
     
@@ -83,7 +83,7 @@ def register():
             last_name=form.last_name.data,
             email=form.email.data,
             is_staff=False)
-        
+        user.password = str(form.password.data)
         try:
             db.session.add(user)
             db.session.commit()    
@@ -93,5 +93,5 @@ def register():
         else:
             current_app.logger.info(f"пользователь создан {user}")
             login_user(user)
-    
+        return redirect(url_for("index"))
     return render_template("user/register.html", form=form, error=error)

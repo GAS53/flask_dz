@@ -2,9 +2,10 @@ from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 
-from models.database import db
 from security import flask_bcrypt
 
+from models.database import db
+import config
 
 class User(db.Model, UserMixin):
     id = db.Column(Integer, primary_key=True, autoincrement=True)
@@ -22,10 +23,11 @@ class User(db.Model, UserMixin):
         print(f'passord getter')
         return self.password
     
+
     @password.setter
     def password(self, value):
         print(f'passord setter {value}')
-        self.pswd = flask_bcrypt.generate_password_hash(value)
+        self.pswd = flask_bcrypt.generate_password_hash(value) # , config.Config.SECRET_KEY 
 
     def validate_password(self, password):
         return flask_bcrypt.check_password_hash(self.pswd, password)
