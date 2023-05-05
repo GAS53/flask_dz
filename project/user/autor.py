@@ -9,7 +9,5 @@ authors = Blueprint("authors", __name__)
 
 @authors.route("/", endpoint="list")
 def authors_list():
-    stmt = select(Author)
-    print(stmt)
-    authors = db.session.execute(stmt).all()
+    authors = Author.query.all()
     return render_template("author/list.html", authors=authors)
