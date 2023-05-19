@@ -3,11 +3,13 @@ from flask_login import login_required
 from werkzeug.exceptions import NotFound
 from sqlalchemy.exc import IntegrityError
 from flask_login import current_user
+
+from sqlalchemy.orm import joinedload
 from models.article import Article
 from forms.article import CreateArticleForm
-
 from models.database import db
 from models.author import Author
+from models.tags import Tag
 
 article = Blueprint('article',__name__, url_prefix='/article', static_folder='../static')
 
@@ -20,7 +22,7 @@ def articles_list():
 
 @article.route("/<int:article_id>/", endpoint="details")
 def article_detals(article_id):
-    article = Article.query.filter_by(id=article_id).one_or_none()
+    article = Article.query.filter_by(id=article_id).options(joinedload(Article.tags)).one_or_none()
     if article is None:
         raise NotFound
     return render_template("article/details.html", article=article)
@@ -30,14 +32,20 @@ def article_detals(article_id):
 def create_article():
     error = None
     form = CreateArticleForm(request.form)
+
+    form.tags.choices = [(tag.id, tag.name) for tag in Tag.query.order_by("name")]
+
     if request.method == "POST" and form.validate_on_submit():
         article = Article(title=form.title.data.strip(), body=form.body.data)
+        if form.tags.data: # если в форму были переданы теги (были выбраны)
+            selected_tags = Tag.query.filter(Tag.id.in_(form.tags.data))
+            for tag in selected_tags:
+                article.tags.append(tag)
+        
         db.session.add(article)
         if current_user.author:
-            # use existing author if present
             article.author = current_user.author
         else:
-            # otherwise create author record
             author = Author(user_id=current_user.id)
             db.session.add(author)
             db.session.flush()
@@ -45,8 +53,8 @@ def create_article():
         try:
             db.session.commit()
         except IntegrityError:
-            current_app.logger.exception("Could not create a new article!")
-            error = "Could not create article!"
+            error = "Статья не была создана"
+            current_app.logger.exception(error)
         else:
-            return redirect(url_for("articles_app.details", article_id=article.id))
-    return render_template("articles/create.html", form=form, error=error)
+            return redirect(url_for("article.details", article_id=article.id))
+    return render_template("article/create.html", form=form, error=error)

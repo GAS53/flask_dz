@@ -14,7 +14,7 @@ from config import ProductionConfig, DevelopmentConfig
 def create_app():
     app = Flask(__name__)
     app.config.from_object(DevelopmentConfig)
-    app.register_blueprint(article)
+    app.register_blueprint(article, url_prefix="/article")
     app.register_blueprint(user)
     app.register_blueprint(auth, url_prefix="/auth")
     app.register_blueprint(authors, surl_prefix="/authors")
