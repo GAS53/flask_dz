@@ -16,4 +16,5 @@ class Tag(db.Model):
                             secondary=artickle_tag,
                             back_populates='tags')
 
-
+    def __str__(self):
+        return self.name
