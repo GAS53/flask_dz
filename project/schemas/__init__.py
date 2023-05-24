@@ -1,3 +1,3 @@
-from Tag import TagSchema
+from schemas.Tag import TagSchema, UserSchema
 
-__all__ = ['TagSchema']
+__all__ = ['TagSchema', 'UserSchema']

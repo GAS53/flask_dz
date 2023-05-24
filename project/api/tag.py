@@ -1,7 +1,7 @@
 from flask_combo_jsonapi import ResourceList, ResourceDetail
 
-from schemas import TagSchema
-from models import Tag
+from schemas import TagSchema, UserSchema
+from models import Tag, User
 from models.database import db
 
 
@@ -19,5 +19,22 @@ class TagDetail(ResourceDetail):
     data_layer = {
         'session': db.session, 
         'model': Tag
+    
+    }
+
+
+class UserDetail(ResourceDetail):
+    shcschema = UserSchema
+    data_layer = {
+        'session': db.session, 
+        'model': User
+    
+    }
+
+class UserList(ResourceList):
+    shcschema = UserSchema
+    data_layer = {
+        'session': db.session, 
+        'model': User
     
     }

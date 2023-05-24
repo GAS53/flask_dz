@@ -9,7 +9,7 @@ from user.auth import auth, login_required
 from forms.user import RegistrationForm, LoginForm
 from models.database import db
 
-user = Blueprint('user',__name__, url_prefix='/user', static_folder='../static')
+user = Blueprint('users',__name__, url_prefix='/user', static_folder='../static')
 
 USERS = [
     {'title': 'title first user',
