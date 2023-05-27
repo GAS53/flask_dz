@@ -50,15 +50,16 @@ def create_app():
     app.config.update({
         'APISPEC_SPEC': APISpec(
             title='pets',
-            version=2,
-            openapi_version=2,
+            version='v1',
+            openapi_version='3.1.0',
             plugins=[MarshmallowPlugin()],
         ),
         'APISPEC_SWAGGER_URL': '/swagger/',
     })
-    docs = FlaskApiSpec(app)
+    # docs = FlaskApiSpec(app)
 
-    docs.register(authors_list)
+    # docs.register(authors_list)
 
 
     return app
+

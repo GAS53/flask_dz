@@ -8,7 +8,7 @@
   <ul class="list-group">
     {% for user in users %}
       <li class="list-group-item">
-        <a href={{ url_for('user.user_one', pk=loop.index0 ) }}>
+        <a href={{ url_for('users.user_one', pk=loop.index0 ) }}>
         {{ user.title }}</a></li>
     {% endfor %}
 

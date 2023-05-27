@@ -6,6 +6,8 @@ from flask_apispec import marshal_with
 from schemas.Autors import AuthorSchema
 
 from models.article import Article
+from combojsonapi.event.resource import EventsResource
+
 
 authors = Blueprint("authors", __name__)
 
