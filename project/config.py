@@ -13,7 +13,9 @@ class Config(object):
 
 class ProductionConfig(Config):
     """Uses production database server."""
-    DB_SERVER = '192.168.19.32'  # переписалть на проде
+    DB_SERVER = 'pg'
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+
 
 
 class DevelopmentConfig(Config):

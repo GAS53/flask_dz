@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    build: ./project
+    ports:
+      - '5000:5000'
+    env_file:
+      - config.env
+    command: bash -c "flask create_tables && flask create_tags && flask create_admin && python wsgi.py"
+    depends_on:
+      - postgre_db
+
+  postgre_db:
+    container_name: postgre_db
+    image: postgres
+    restart: always
+    env_file:
+      - config.env
+    ports:
+      - '5432:5432'
+    volumes:
+      - ../db_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '8084:8080'
+    depends_on:
+      - postgre_db
+
+volumes:
+  db_data:
