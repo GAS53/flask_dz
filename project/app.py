@@ -3,7 +3,7 @@ from security import flask_bcrypt
 from flask_combo_jsonapi import Api
 
 
-from config import ProductionConfig, DevelopmentConfig
+from config import ProductionConfig, DevelopmentConfig, TestingConfig
 from api.tag import TagDetail, TagList, UserList, UserDetail
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
@@ -34,7 +34,7 @@ def registr_api(app: Flask):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(DevelopmentConfig)
+    app.config.from_object(TestingConfig)
     app.register_blueprint(article, name='article')
     app.register_blueprint(user, name='test')
     app.register_blueprint(auth, name='auth')
