@@ -8,6 +8,8 @@ from models.user import User
 from models.database import db
 from sqlalchemy import create_engine
 
+
+
 app = create_app()
 migrate = Migrate(app, db, compare_type=True)
 
