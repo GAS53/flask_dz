@@ -22,7 +22,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     
     DB_SERVER = 'localhost'
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.getcwd()}/db.sqllite'
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.getcwd()}/project/db.sqllite'
 
 
 
