@@ -13,7 +13,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     """Uses production database server."""
-    DB_SERVER = 'postgre_db'
+    DB_SERVER = 'dpg-chrib0rhp8ud4n6mlfg0-a'
     SQLALCHEMY_DATABASE_URI = 'postgres://im_user:V8orqf2qaZsQ3pjYKPJFh7s9wqAA8mP6@dpg-chrib0rhp8ud4n6mlfg0-a/db_50m4'
 
 
