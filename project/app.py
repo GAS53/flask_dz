@@ -34,7 +34,7 @@ def registr_api(app: Flask):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(TestingConfig)
+    app.config.from_object(DevelopmentConfig)
     app.register_blueprint(article, name='article')
     app.register_blueprint(user, name='test')
     app.register_blueprint(auth, name='auth')
