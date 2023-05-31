@@ -63,7 +63,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option("postgres://im_user:V8orqf2qaZsQ3pjYKPJFh7s9wqAA8mP6@dpg-chrib0rhp8ud4n6mlfg0-a/db_50m4")
     context.configure(
         url=url, target_metadata=get_metadata(), literal_binds=True
     )
