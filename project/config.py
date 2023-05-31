@@ -14,7 +14,7 @@ class Config(object):
 class ProductionConfig(Config):
     """Uses production database server."""
     DB_SERVER = 'pg'
-    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 
