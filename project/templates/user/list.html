@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <ul class="list-group">
+    {% for user in users %}
+      <li class="list-group-item">
+        <a href={{ url_for('users.user_one', pk=loop.index0 ) }}>
+        {{ user.title }}</a></li>
+    {% endfor %}
+
+  </ul>
+{% endblock %}
+

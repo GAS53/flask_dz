@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    статья #{{ article.id }}: {{ article.title }}
+{% endblock %}
+{% block content %}
+    <h1>{{ article.title }}</h1>
+    <div>
+        <p>{{ article.body }}</p>
+        <div>Опубликована {{ article.dt_created }}</div>
+        <div>автор {{ article.author.user.login }}</div>
+    </div>
+    {% if article.tags %}
+        <div>Теги:</div>
+        <ul>
+            {% for tag in article.tags %}
+                <li>{{ tag.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
